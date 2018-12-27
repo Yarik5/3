@@ -1,0 +1,49 @@
+1
+CREATE TABLE SalesLT.ProductTMP_509   (
+
+    ProductID int IDENTITY(1,1) NOT NULL,
+
+    Name nvarchar(255) NOT NULL,
+
+    ProductNumber nvarchar(25) NOT NULL,
+
+    Color nvarchar(15) NULL,
+
+    StandardCost money NOT NULL,
+
+    ListPrice money NOT NULL,
+
+    Size nvarchar(5) NULL,
+
+    Weight decimal(8, 2) NULL,
+
+    ProductCategoryID int NULL
+
+)
+
+2
+SET IDENTITY_INSERT SalesLT.ProductTMP_509 ON
+INSERT INTO SalesLT.ProductTMP_509 (ProductID, Name, ProductNumber, Color, StandardCost, ListPrice, Size, Weight, ProductCategoryID)
+SELECT ProductID, Name, ProductNumber, Color, StandardCost, ListPrice, Size, Weight, ProductCategoryID
+FROM SalesLT.Product
+
+3
+CREATE TABLE SalesLT.ColorTMP_509   (
+    ColorID int IDENTITY(1,1) NOT NULL,
+    NameColor nvarchar(25) NOT NULL,
+)
+
+4
+INSERT INTO SalesLT.ColorTMP_509 (NameColor)
+SELECT Color
+FROM SalesLT.Product
+WHERE Color IS NOT NULL
+
+5
+ALTER TABLE SalesLT.ProductTMP_509 ADD ColorID int
+
+6
+UPDATE SalesLT.ProductTMP_509
+SET  SalesLT.ProductTMP_509.ColorID = SalesLT.ColorTMP_509.ColorID 
+FROM SalesLT.ColorTMP_509
+WHERE SalesLT.ProductTMP_509.Color is not null and SalesLT.ProductTMP_509.Color = SalesLT.ColorTMP_509.NameColor
